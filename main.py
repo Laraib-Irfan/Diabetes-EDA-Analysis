@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from scipy import stats
+from scipy.stats import ttest_ind
 
 #loading the dataset
 df=pd.read_csv("diabetes_dataset.csv")
@@ -183,4 +185,48 @@ print(pd.crosstab(df['gender'],df['diabetes'], normalize='index')*100)
 print(pd.crosstab(df['smoking_history'], df['diabetes'], normalize='index')*100)
 print(df['smoking_history'].value_counts())
 
+#Statistical analysis of the dataset
+print(f"\n Statistical analysis of the dataset:")
 
+#1:Hypothesis testing: checking if there is a significant difference in blood glucose level's between diabetic and non diabeticgroups
+#Null hypothesis: There is no significant difference in bloodglucose level between diabetic and non diabetic groups
+#Alternative hypothesis: There is a significant difference in blood glucose level between diabetic and non diabetic groups
+
+ttest_ind#This test is for null hypothesis that 2 independent sample have identical average values.
+glucose_no_diabetes=df[df['diabetes']==0]['blood_glucose_level']
+glucose_diabetes=df[df['diabetes']==1]['blood_glucose_level']
+
+t_stats,p_value =ttest_ind(glucose_no_diabetes,
+                     glucose_diabetes,
+                     equal_var=False) #welch's test which does not assume equal population variance
+print(f"\n T-statistics: {t_stats}") 
+print(f"\n P-value:{p_value}") #if p value < we reject the null hypothesis and accept the alternative 
+
+if p_value < 0.05:
+    print("Reject the null hypothesis ")
+    print("There is a significant difference in blodd glucose level between diabetic and non diabetic groups")
+else:
+    print("Fail to reject the null Hypothesis")
+    print("There is no significant difference in blood glucose level between diabetic and non diabetic groups")
+
+#BMI by diabetes status 
+bmi_no_diabetes=df[df['diabetes']==0]['bmi']
+bmi_diabetes=df[df['diabetes']==1]['bmi']
+t_stats,p_value=ttest_ind(bmi_no_diabetes,
+                          bmi_diabetes,
+                          equal_var=False) # do not assume equal variance of both groups that's why we use equal_var=Flase
+print(f"\n T-statistics for BMI:{t_stats}")
+print(f"\n P-value for BMI:{p_value}")
+if p_value < 0.05:
+    print("Reject the null hypothesis ")
+    print("There is a significant difference in BMI between diabetic and non diabetic groups")
+else:
+    print("Fail to reject the null Hypothesis")
+    print("There is no significant difference in BMI between diabetic and non diabetic groups")
+
+
+print("Mean glucose - Non-diabetic:", glucose_no_diabetes.mean())
+print("Mean glucose - Diabetic:", glucose_diabetes.mean())
+
+print("Mean BMI - Non-diabetic:", bmi_no_diabetes.mean())
+print("Mean BMI - Diabetic:", bmi_diabetes.mean())
