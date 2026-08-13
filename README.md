@@ -25,7 +25,7 @@ This project performs a comprehensive EDA and statistical analysis on a diabetes
 
 ## 🛠️ Tools & Libraries
 
-Python • Pandas • NumPy • Matplotlib • Seaborn • SciPy • Jupyter Notebook
+Python • Pandas • NumPy • Matplotlib • Seaborn • SciPy 
 
 ## 🔍 EDA Performed
 
